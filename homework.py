@@ -27,8 +27,6 @@ class Training:
 
     LEN_STEP: float = 0.65
     M_IN_KM: int = 1000
-    COEFF_CALORIE_1: int = 18
-    COEFF_CALORIE_2: int = 20
     COEFF_CALORIE_3: int = 60
 
     def __init__(self,
@@ -68,7 +66,6 @@ class Running(Training):
 
     COEFF_CALORIE_1: int = 18
     COEFF_CALORIE_2: int = 20
-    COEFF_CALORIE_3: int = 60
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -90,7 +87,6 @@ class SportsWalking(Training):
 
     COEFF_CALORIE_1: float = 0.035
     COEFF_CALORIE_2: float = 0.029
-    COEFF_CALORIE_3: float = 60
 
     def __init__(self,
                  action: int,
