@@ -14,7 +14,6 @@ class InfoMessage:
 
     def get_message(self) -> str:
         """Функция вывода сообщения о тренировке."""
-
         message = ("Тип тренировки: {}; "
                    "Длительность: {:.3f} ч.; "
                    "Дистанция: {:.3f} км; "
@@ -26,8 +25,11 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
 
-    LEN_STEP = 0.65
-    M_IN_KM = 1000
+    LEN_STEP: float = 0.65
+    M_IN_KM: int = 1000
+    COEFF_CALORIE_1: int = 18
+    COEFF_CALORIE_2: int = 20
+    COEFF_CALORIE_3: int = 60
 
     def __init__(self,
                  action: int,
@@ -41,12 +43,10 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-
         return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-
         return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
@@ -56,7 +56,6 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-
         return InfoMessage(type(self).__name__,
                            self.duration,
                            self.get_distance(),
@@ -66,20 +65,19 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    COEFF_CALORIE_1: float = 18
-    COEFF_CALORIE_2: float = 20
-    COEFF_CALORIE_3: float = 60
+
+    COEFF_CALORIE_1: int = 18
+    COEFF_CALORIE_2: int = 20
+    COEFF_CALORIE_3: int = 60
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-
         return ((self.COEFF_CALORIE_1 * self.get_mean_speed()
                  - self.COEFF_CALORIE_2) * self.weight / self.M_IN_KM
                 * (self.duration * self.COEFF_CALORIE_3))
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-
         return InfoMessage(type(self).__name__,
                            self.duration,
                            self.get_distance(),
@@ -89,6 +87,7 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
     COEFF_CALORIE_1: float = 0.035
     COEFF_CALORIE_2: float = 0.029
     COEFF_CALORIE_3: float = 60
@@ -105,7 +104,6 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-
         return ((self.COEFF_CALORIE_1 * self.weight
                  + (self.get_mean_speed()**2 // self.height)
                  * self.COEFF_CALORIE_2 * self.weight)
@@ -113,7 +111,6 @@ class SportsWalking(Training):
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-
         return InfoMessage(type(self).__name__,
                            self.duration,
                            self.get_distance(),
@@ -124,7 +121,7 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
 
-    LEN_STEP = 1.38
+    LEN_STEP: float = 1.38
     COEFF_CALORIE_1: float = 1.1
 
     def __init__(self,
@@ -141,19 +138,16 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-
         return ((self.get_mean_speed()
                  + self.COEFF_CALORIE_1) * 2 * self.weight)
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-
         return InfoMessage(type(self).__name__,
                            self.duration,
                            self.get_distance(),
@@ -177,7 +171,6 @@ def read_package(workout_type: str, data: list) -> Training:
 
 def main(training: Training) -> None:
     """Главная функция."""
-
     info = training.show_training_info()
     print(info.get_message())
 
