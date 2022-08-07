@@ -1,3 +1,4 @@
+from dataclasses import dataclass, fields
 from typing import Union
 
 
@@ -31,11 +32,15 @@ class InfoMessage:
     pass
 
 
+@dataclass
 class Training:
     """Базовый класс тренировки."""
 
     LEN_STEP = 0.65
     M_IN_KM = 1000
+    action: int
+    duration: float
+    weight: float
 
     def __init__(self,
                  action: int,
@@ -75,6 +80,7 @@ class Training:
         pass
 
 
+@dataclass
 class Running(Training):
     """Тренировка: бег."""
 
@@ -100,8 +106,14 @@ class Running(Training):
     pass
 
 
+@dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
+    action: int
+    duration: float
+    weight: float
+    height: Union[int, float]
 
     def __init__(self,
                  action: int,
@@ -137,10 +149,16 @@ class SportsWalking(Training):
     pass
 
 
+@dataclass
 class Swimming(Training):
     """Тренировка: плавание."""
 
     LEN_STEP = 1.38
+    action: int
+    duration: float
+    weight: float
+    length_pool: float
+    count_pool: int
 
     def __init__(self,
                  action: int,
@@ -182,28 +200,23 @@ class Swimming(Training):
     pass
 
 
+SPORTS_DICTIONARY: dict[str, type[Training]] = {
+    "SWM": Swimming,
+    "RUN": Running,
+    "WLK": SportsWalking,
+}
+
+
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    """Не совсем понятно, зачем нужен словарь?
-    Не нашел информации, как в словаре задать и применить класс."""
-
-    try:
-        if workout_type == "SWM" and len(data) >= 4:
-            return Swimming(data[0], data[1], data[2], data[3], data[4])
-        elif workout_type == "RUN" and len(data) >= 3:
-            return Running(data[0], data[1], data[2])
-        elif workout_type == "WLK" and len(data) >= 4:
-            return SportsWalking(data[0], data[1], data[2], data[3])
-        elif len(data) >= 3:
-            return Training(data[0], data[1], data[2])
+    if workout_type in SPORTS_DICTIONARY:
+        if len(fields(SPORTS_DICTIONARY[workout_type])) == len(data):
+            return SPORTS_DICTIONARY[workout_type](*data)
         else:
-            raise Exception
-    except Exception:
-        print("Объект не подходит по параметрам")
-        return Training(1, 0, 0)
-
-    pass
+            return IndexError
+    else:
+        return KeyError
 
 
 def main(training: Training) -> None:
