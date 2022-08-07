@@ -1,5 +1,5 @@
 from dataclasses import dataclass, fields
-from typing import Union
+from typing import Union, Type
 
 
 class InfoMessage:
@@ -200,7 +200,7 @@ class Swimming(Training):
     pass
 
 
-SPORTS_DICTIONARY: dict[str, type[Training]] = {
+SPORTS_DICTIONARY: dict[str, Type[Training]] = {
     "SWM": Swimming,
     "RUN": Running,
     "WLK": SportsWalking,
